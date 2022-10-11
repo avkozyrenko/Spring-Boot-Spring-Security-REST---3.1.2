@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.models;
+package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
 
@@ -19,7 +19,8 @@ public class Role implements GrantedAuthority {
     @NotEmpty(message = "Назначьте права доступа новому пользователю")
     private String role;
 
-    public Role() {}
+    public Role() {
+    }
 
     public Role(String role) {
         this.role = role;

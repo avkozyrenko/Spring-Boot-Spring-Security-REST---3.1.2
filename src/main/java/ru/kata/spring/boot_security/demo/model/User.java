@@ -1,20 +1,18 @@
-package ru.kata.spring.boot_security.demo.models;
+package ru.kata.spring.boot_security.demo.model;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table (name = "users")
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
@@ -49,7 +47,7 @@ public class User implements UserDetails {
     public User(String username, String password, Collection<String> roleSet) {
         this.username = username;
         this.password = password;
-        this.roleSet= roleSet.stream().map(Role::new).collect(Collectors.toSet());
+        this.roleSet = roleSet.stream().map(Role::new).collect(Collectors.toSet());
     }
 
     public int getId() {
@@ -128,5 +126,4 @@ public class User implements UserDetails {
         return "User id =" + id + ", username= " + username + ", password='" + password +
                 ", roleSet=" + roleSet;
     }
-
 }

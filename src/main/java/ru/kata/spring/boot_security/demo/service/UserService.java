@@ -1,6 +1,7 @@
-package ru.kata.spring.boot_security.demo.services;
+package ru.kata.spring.boot_security.demo.service;
 
-import ru.kata.spring.boot_security.demo.models.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import ru.kata.spring.boot_security.demo.model.User;
 
 import java.util.List;
 
@@ -16,7 +17,5 @@ public interface UserService {
 
     public void deleteUser(int id);
 
-    public User findByUsername(String username);
-
-
+    public UserDetails loadUserByUsername(String username);
 }

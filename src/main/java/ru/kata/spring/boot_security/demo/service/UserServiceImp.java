@@ -1,30 +1,43 @@
-package ru.kata.spring.boot_security.demo.services;
+package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.model.User;
 
+import javax.annotation.PostConstruct;
+import java.util.Arrays;
 import java.util.List;
+
 @Service
-public class UserServiceImp implements UserService{
+public class UserServiceImp implements UserService, UserDetailsService {
 
     private final UserDao userDao;
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserDao userDao, PasswordEncoder passwordEncoder) {
+    public UserServiceImp(@Lazy UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
 
+//    @PostConstruct
+//    @Transactional
+//    public void init(){
+//        userDao.addUser(new User("user", "user", Arrays.asList("ROLE_USER")));
+//        userDao.addUser(new User("admin", "admin", Arrays.asList("ROLE_ADMIN")));
+//    }
+
     @Transactional
     @Override
     public void addUser(User user) {
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.addUser(user);
     }
@@ -54,8 +67,14 @@ public class UserServiceImp implements UserService{
         userDao.deleteUser(id);
     }
 
+
     @Override
-    public User findByUsername(String username) {
-        return userDao.findByUsername(username);
+    @Transactional
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userDao.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Пользователь не найден");
+        }
+        return user;
     }
 }

@@ -1,32 +1,23 @@
-package ru.kata.spring.boot_security.demo.controllers;
+package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
 import java.util.Arrays;
 
-@org.springframework.stereotype.Controller
-public class Controller {
+@Controller
+public class AdminController {
 
     private final UserService userservice;
 
     @Autowired
-    public Controller(UserService userservice) {
+    public AdminController(UserService userservice) {
         this.userservice = userservice;
     }
-
-    @GetMapping("/user")
-    public String getUser(Model model, Principal principal) {
-        model.addAttribute("user",userservice.findByUsername(principal.getName()));
-        return "simpleUser";
-    }
-
 
     @GetMapping("/admin/{id}")
     public String getUser(@PathVariable("id") int id, Model model) {
@@ -34,16 +25,8 @@ public class Controller {
         return "user";
     }
 
-    @GetMapping("/")
-    public String getWelcomePage() {
-        if(userservice.getAllUsers().isEmpty())
-            userservice.addUser(new User("admin","admin", Arrays.asList("ROLE_ADMIN")));
-        return "welcomePage";
-    }
-
     @GetMapping("/admin")
     public String getAllUsers(Model model) {
-
         model.addAttribute("users", userservice.getAllUsers());
         return "admin";
     }
