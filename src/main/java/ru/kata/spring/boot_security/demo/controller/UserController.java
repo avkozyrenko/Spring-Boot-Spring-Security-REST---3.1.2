@@ -25,8 +25,4 @@ public class UserController {
         return "simpleUser";
     }
 
-    @GetMapping("/")
-    public String getWelcomePage() {
-        return "welcomePage";
-    }
 }

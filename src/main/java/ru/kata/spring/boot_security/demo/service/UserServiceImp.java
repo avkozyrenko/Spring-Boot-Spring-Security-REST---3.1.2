@@ -13,7 +13,9 @@ import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
@@ -22,18 +24,14 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private Map<String, User> roles = new HashMap<>();
+
     @Autowired
     public UserServiceImp(@Lazy UserDao userDao, @Lazy PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
     }
 
-//    @PostConstruct
-//    @Transactional
-//    public void init(){
-//        userDao.addUser(new User("user", "user", Arrays.asList("ROLE_USER")));
-//        userDao.addUser(new User("admin", "admin", Arrays.asList("ROLE_ADMIN")));
-//    }
 
     @Transactional
     @Override
@@ -69,7 +67,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.findByUsername(username);
         if (user == null) {
